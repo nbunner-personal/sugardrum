@@ -1,0 +1,110 @@
+@use "sass:color";
+
+/**
+ * Colour tokens.
+ *
+ * Every colour in the stylesheets comes from a `--color-*` custom property.
+ * The page background, banner, menu and buttons are the same in both themes;
+ * the themes only change the content area (its background, plus the text,
+ * link and border colours needed to stay readable on it).
+ *
+ * The light theme is the default; the dark theme applies when:
+ *   - the OS prefers dark and the visitor hasn't picked light, or
+ *   - the visitor picks "Dark mode" with the footer toggle (`#theme-dark`,
+ *     works without JavaScript via :has()), or
+ *   - a saved preference sets <html data-theme="dark"> (see base layout).
+ * Toggle/`data-theme` rules beat the OS preference.
+ */
+
+$link: #2978a0;
+$highlight: #51b0ba;
+
+$theme-light: (
+  surface: #fff,               // text sections, blockquotes, cards
+  surface-alt: #fffffa,        // page body, music release blocks
+  surface-hover: #f2f2f2,
+  surface-muted: #eee,
+  text: #333,
+  text-content: #253031,
+  text-muted: #818689,
+  text-soft: #777,
+  text-subtle: #999,
+  heading: #272727,
+  link: $link,
+  link-hover: color.adjust($link, $lightness: 5%),
+  border: #cecece,
+  border-light: #ddd,
+  border-pale: #a4a7aa,
+  quote-accent: #87d1b4,
+);
+
+$theme-dark: (
+  surface: #1a242b,
+  surface-alt: #161f25,
+  surface-hover: #22303a,
+  surface-muted: #26343e,
+  text: #d3d9dc,
+  text-content: #d3d9dc,
+  text-muted: #a3adb3,
+  text-soft: #929da4,
+  text-subtle: #8a959c,
+  heading: #f0f3f4,
+  link: #6fbadf,
+  link-hover: #95cdea,
+  border: #31404a,
+  border-light: #2c3a44,
+  border-pale: #4a5a65,
+  quote-accent: #5fb594,
+);
+
+@mixin theme($map, $scheme) {
+  color-scheme: $scheme;
+  @each $name, $value in $map {
+    --color-#{$name}: #{$value};
+  }
+  // Footer toggle shows the option you can switch *to*
+  @if $scheme == dark {
+    --theme-toggle-to-light: inline-flex;
+    --theme-toggle-to-dark: none;
+  } @else {
+    --theme-toggle-to-light: none;
+    --theme-toggle-to-dark: inline-flex;
+  }
+}
+
+:root {
+  @include theme($theme-light, light);
+
+  // Same in both themes
+  // Dark brown sampled from the edges of the banner photo
+  // (sugardrum-guitar-barn-2) so the photo blends into the page.
+  --color-page-bg: #1a1008;
+  --color-brand: #324c5c;          // menu, video strip
+  --color-brand-translucent: rgba(50, 76, 92, 0.8);
+  --color-highlight: #{$highlight};
+  --color-highlight-hover: #{color.adjust($highlight, $lightness: 5%)};
+  --color-nav-current: #42acb8;
+  --color-inverse: #fff;           // text on photos, header and footer
+  --color-footer-bg: #000;
+  --color-overlay: rgba(0, 0, 0, 0.3);
+  --color-shadow: rgba(0, 0, 0, 0.5);
+  --color-shadow-strong: rgba(0, 0, 0, 0.8);
+  --color-pressed: rgba(0, 0, 0, 0.125);
+  --color-text-glow: rgba(255, 255, 255, 0.25);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    @include theme($theme-dark, dark);
+  }
+}
+
+:root[data-theme="light"],
+:root:has(#theme-light:checked) {
+  @include theme($theme-light, light);
+}
+
+:root[data-theme="dark"],
+:root:has(#theme-dark:checked) {
+  @include theme($theme-dark, dark);
+}

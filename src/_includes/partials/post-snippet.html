@@ -1,0 +1,7 @@
+<article class="col-xs-12 post post--snippet">
+  <header>
+    <h2><a class="post-link" href="{{ post.url }}">{{ post.data.title }}</a></h2>
+    <time datetime="{{ post.date | isoDate }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+  </header>
+  <div class="text-col"><p>{{ post.content | excerpt: post.data.excerpt }} <a href="{{ post.url }}">More&hellip;</a></p></div>
+</article>

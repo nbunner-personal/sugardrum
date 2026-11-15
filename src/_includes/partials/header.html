@@ -1,0 +1,24 @@
+<header class="site-banner" role="banner">
+  <div class="site-banner__inner">
+    <img class="site-banner__image"
+      src="https://files.sugardrum.com/img/header-banners/sugardrum-guitar-barn-2-w1500.jpg"
+      srcset="https://files.sugardrum.com/img/header-banners/sugardrum-guitar-barn-2-w500.jpg 500w,
+              https://files.sugardrum.com/img/header-banners/sugardrum-guitar-barn-2-w900.jpg 900w,
+              https://files.sugardrum.com/img/header-banners/sugardrum-guitar-barn-2-w1500.jpg 1500w"
+      sizes="(min-width: 1500px) 1500px, 100vw"
+      width="1500" height="613" alt="">
+    <p id="logo" class="site-banner__logo"><a href="/">{{ site.title }}</a></p>
+    <button type="button" class="nav_icon mobileNavIcon" aria-label="Menu" aria-controls="menu-top-nav" aria-expanded="false">
+      <i class="fa fa-bars" id="menuClosed" aria-hidden="true"></i><i class="fa fa-times" id="menuOpen" aria-hidden="true" hidden></i>
+    </button>
+    <nav role="navigation" class="top-nav" id="menu-top-nav">
+      <ul class="nav">
+        <li class="menu-item{% if currentPage == 'home' %} current-menu-item{% endif %}"><a href="/"{% if currentPage == 'home' %} aria-current="page"{% endif %}>Home</a></li>
+        {%- include "partials/nav.html" %}
+      </ul>
+    </nav>
+    {%- if topTitle %}
+    <h1 class="site-banner__title">{{ topTitle }}</h1>
+    {%- endif %}
+  </div>
+</header>

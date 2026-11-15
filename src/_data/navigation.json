@@ -1,0 +1,11 @@
+[
+  { "key": "music", "label": "Music", "url": "/listen/", "title": "Sugardrum recordings" },
+  { "key": "videos", "label": "Videos", "url": "/videos/", "title": "Videos of Sugardrum" },
+  { "key": "photos", "label": "Photos", "url": "/photos/", "title": "Photos of Sugardrum" },
+  { "key": "gigs", "label": "Gigs", "url": "/gigs/", "title": "Sugardrum gigs" },
+  { "key": "news", "label": "News", "url": "/blog/", "title": "Sugardrum news" },
+  { "key": "reviews", "label": "Reviews", "url": "/reviews/", "title": "Sugardrum reviews" },
+  { "key": "about", "label": "About", "url": "/about/", "title": "About Sugardrum" },
+  { "key": "press", "label": "Press", "url": "/electronic-press-kit/", "title": "Sugardrum press kit" },
+  { "key": "contact", "label": "Contact", "url": "/contact/", "title": "Get in touch" }
+]
