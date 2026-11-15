@@ -1,0 +1,220 @@
+@charset "utf-8";
+
+$font-family-sans-serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$font-family-serif: 'Lora', 'Georgia', Cambria, 'Times New Roman', Times, serif;
+
+@import
+	"tokens",
+	"base"
+;
+
+a:link, a:visited {color: var(--color-link);}
+a:hover {color: var(--color-link-hover);}
+
+body, html {font-family: $font-family-serif;}
+body {background: var(--color-page-bg);}
+.col-all-full-width {padding-left: 0; padding-right: 0;}
+
+p {font-family: $font-family-sans-serif; font-size: 1.2em; line-height: 1.6em; margin: 0 0 1.6em;}
+blockquote {background: var(--color-surface); border-left: 3px solid var(--color-quote-accent); font-family: $font-family-sans-serif; margin: 1.6em 10px 2em 20px; padding: 10px 15px;}
+
+.btn {font-family: $font-family-sans-serif;}
+.btn-common {background: var(--color-highlight); border: 1px solid var(--color-inverse); font-size: 18px;}
+a.btn-common:link, a.btn-common:visited {color: var(--color-inverse);}
+.btn-common:hover {background: var(--color-highlight-hover); color: var(--color-inverse);}
+
+.review-quote-cont .btn-common {
+	margin: 30px auto 0; padding: 8px 32px; white-space: normal;
+}
+
+#content {position: relative;}
+// Main content area: rounded box with breathing room above the footer
+.content-panel {margin-bottom: 60px;}
+.content-panel.col-cont {background: var(--color-surface); padding-bottom: 40px;}
+.full-width .entry-content {background: var(--color-surface); padding-bottom: 40px;}
+.entry-content {background: var(--color-surface-alt);}
+// Site banner: the same photo on every page, fading into the page background
+.site-banner {background: var(--color-page-bg); position: relative;}
+.site-banner__inner {margin: 0 auto; max-width: 1500px; position: relative;}
+.site-banner__image {display: block; height: auto; width: 100%;}
+// Soften the bottom edge (and the sides once the page is wider than the photo)
+.site-banner__inner::after {
+	background: linear-gradient(to bottom, transparent 70%, var(--color-page-bg));
+	content: ""; inset: 0; pointer-events: none; position: absolute;
+}
+.site-banner__logo {
+	font-size: 22px; left: 15px; margin: 0; position: absolute; top: 10px; z-index: 2;
+	a:link, a:visited {color: var(--color-inverse); text-decoration: none; text-shadow: 0 1px 6px var(--color-shadow-strong);}
+}
+.site-banner__title {
+	background: var(--color-brand-translucent); border-radius: 2px; bottom: 15px; color: var(--color-inverse); display: inline-block; font-size: 1.6em; left: 15px; margin: 0; padding: 6px 12px; position: absolute; z-index: 2;
+}
+
+// Hamburger menu floating over the top right of the banner
+.nav_icon {
+	align-items: center; background: var(--color-overlay); border: 0; border-radius: 4px; color: var(--color-inverse); cursor: pointer; display: flex; font-size: 1.5em; height: 44px; justify-content: center; padding: 0; position: absolute; right: 15px; top: 10px; width: 44px; z-index: 1001;
+	&:hover, &:focus-visible {background: var(--color-shadow-strong);}
+	&:focus-visible {outline: 2px solid var(--color-inverse); outline-offset: 2px;}
+}
+.top-nav {
+	background: var(--color-brand); border-radius: 4px; box-shadow: 0 4px 16px var(--color-shadow); color: var(--color-inverse); display: none; font-family: $font-family-sans-serif; min-width: 220px; overflow: hidden; position: absolute; right: 15px; top: 60px; z-index: 1000;
+	a:link, a:visited {color: var(--color-inverse);}
+	.nav > li > a {border-bottom: 1px solid var(--color-overlay); padding: 12px 20px;}
+	.nav > li:last-child > a {border-bottom: 0;}
+	.nav > li > a:hover, .nav > li > a:focus {background: var(--color-highlight);}
+	.nav li.current-menu-item > a {background: var(--color-nav-current);}
+}
+
+.top-section {
+	color: var(--color-inverse);
+	h1 {color: var(--color-inverse);}
+}
+
+
+.review-quote-cont {padding: 0 15px 30px; text-align: center;}
+.review-quote {
+	color: var(--color-inverse); font-size: 18px; margin: 1em 0 0; text-align: center;
+	em {display: block;}
+}
+
+.videos-section {
+	clear: both; margin-top: 30px; overflow: hidden; padding: 0 0 1.6em 0;	
+	p {margin: 4.6em 0 0;}
+}
+.home-youtube-container {
+	clear: both; cursor: pointer; position: relative;
+	img {max-height: 315px; width: 100%;}
+	i {color: var(--color-inverse); font-size: 72px; left: 50%; margin: -33px 0 0 -31px; position: absolute; text-shadow: 0 0 8px var(--color-shadow); top: 50%;}
+}
+
+
+.iframe-cont {margin: 15px auto;} // amazon kindle thing
+
+
+footer.main-footer {
+	background: var(--color-footer-bg) url(https://files.sugardrum.com/img/header-back-500-b.jpg) 50% 0 no-repeat; clear: both; color: var(--color-inverse); padding-top: 106px; padding-bottom: 1.6em;
+	a:link, a:visited {color: var(--color-inverse);}
+	.social-links {font-size: 31px; padding: 15px 0; text-align: center;}
+	.footer-nav {
+		font-family: $font-family-sans-serif; font-size: 15px; list-style: none; margin: 0 auto 1.6em; max-width: 840px; padding: 0 15px; text-align: center;
+		li {display: inline-block; margin: 4px 10px;}
+		a:link, a:visited {text-decoration: none;}
+		a:hover, a:focus {text-decoration: underline;}
+		.current-menu-item a {text-decoration: underline;}
+	}
+	p {margin-top: 1.6em; text-align: center;}
+}
+
+// Light/dark toggle in the footer: shows the option you can switch to
+.theme-toggle {
+	border: 0; margin: 1.6em 0 0; padding: 0; text-align: center;
+	&:focus-within {outline: 2px solid var(--color-inverse); outline-offset: 4px;}
+}
+.theme-toggle__option {
+	align-items: center; border: 1px solid var(--color-inverse); border-radius: 999px; cursor: pointer; font-family: $font-family-sans-serif; font-size: 14px; font-weight: normal; gap: 6px; padding: 4px 14px;
+	&:hover {background: var(--color-inverse); color: var(--color-footer-bg);}
+}
+.theme-toggle__option--light {display: var(--theme-toggle-to-light);}
+.theme-toggle__option--dark {display: var(--theme-toggle-to-dark);}
+
+.card-list {
+	li {border: 1px solid var(--color-border-pale); float: left; min-height: 300px; margin: 8px; width: 280px;}
+	img {display: block; height: auto; width: 280px;}
+	span {display: block; font-size: 17px; padding: 10px;}
+}
+
+@media only screen and (min-width: 481px) {
+
+	// .btn {font-size: 1.6em;}
+	.review-quote {font-size: 22px;}
+	.site-banner__logo {font-size: 28px; left: 25px; top: 15px;}
+	.site-banner__title {bottom: 25px; font-size: 2.2em; left: 25px;}
+	.nav_icon {right: 25px; top: 15px;}
+	.top-nav {right: 25px; top: 65px;}
+	
+
+	.videos-section {
+		padding: 0 0 60px;
+		p {margin: 1.6em 0 0;}
+	}
+	.home-youtube-container {
+		img {max-height: 551px; max-width: 980px;}
+	}
+	footer.main-footer {
+		background-image: url("https://files.sugardrum.com/img/header-back-1000-b.jpg");
+		.social-links {margin-top: 4em;}
+	}
+
+} // end of media query
+
+
+@media only screen and (min-width: 768px) {
+
+	#content {color: var(--color-text-content);}
+	.text-col {margin: 0 auto; max-width: 840px;}
+	.col-cont {margin: 0 auto; max-width: 1040px; overflow: hidden;}
+	.videos-section {
+		margin: 30px auto 0; max-width: 980px;
+		// .col-cont {max-width: 640px}
+	}
+	.site-banner__title {font-size: 3em;}
+	.review-quote-cont {margin: 0 auto; max-width: 840px;}
+
+	.review-quote {font-size: 28px;}
+	.entry-content {min-height: 440px;}
+	.content-panel.col-cont, .full-width .entry-content {border-radius: 10px; overflow: hidden;}
+	.content-panel {margin-bottom: 90px;}
+	.text-section {
+		background: var(--color-surface); color: var(--color-text-muted); padding-top: 30px;
+		h1, h2 {color: var(--color-heading);}
+	}
+	.page-navigation {
+		a:hover {text-decoration: underline;}
+	}
+} // end of media query
+
+
+@media only screen and (min-width: 1030px) {
+	footer.main-footer {
+		background-image: url("https://files.sugardrum.com/img/header-back-2000-b.jpg");		
+	}
+
+} // end of media query
+
+
+@media only screen and (min-width: 1240px) {
+
+	section {margin: 0 auto; max-width: 1400px;}
+	// .new-album-section {min-height: 720px;}
+	footer.main-footer {
+		background-image: url("https://files.sugardrum.com/img/header-back-4000-b.jpg");		
+	}
+} // end of media query
+
+@media only screen and (min-width: 1500px) {
+	.site-banner__inner::after {
+		background:
+			linear-gradient(to right, var(--color-page-bg), transparent 6%, transparent 94%, var(--color-page-bg)),
+			linear-gradient(to bottom, transparent 70%, var(--color-page-bg));
+	}
+}
+@mixin media-query($device) {
+    @media screen and (max-width: $device) {
+        @content;
+    }
+}
+
+@import
+	"videos",
+	"photos",
+	"gigs",
+	"music",
+	"blog"
+
+;
+
+// Photo lightbox (LiteLight, from node_modules – see eleventy.config.js)
+@import "litelight";
+.lite-light-caption {
+	bottom: 15px; color: var(--color-inverse); font-family: $font-family-sans-serif; font-size: 1em; left: 0; margin: 0; padding: 0 60px; position: absolute; right: 0; text-align: center; text-shadow: 0 1px 3px var(--color-shadow-strong); z-index: 2;
+}

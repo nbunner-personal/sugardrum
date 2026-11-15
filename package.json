@@ -1,20 +1,26 @@
 {
-  "name": "cys-static",
-  "version": "0.1.0",
+  "name": "sugardrum",
+  "version": "1.0.0",
+  "private": true,
   "description": "The Sugardrum website",
   "author": "Nigel Bunner",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "ELEVENTY_ENV=production eleventy",
+    "start": "eleventy --serve",
+    "clean": "rm -rf _site"
+  },
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-clean": "^0.7.0",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-csslint": "~0.2.0",
-    "grunt-contrib-cssmin": "~0.7.0",
-    "grunt-contrib-less": "^1.1.0",
-    "grunt-contrib-uglify": "^0.3.3",
-    "grunt-contrib-watch": "^0.5.3",
-    "grunt-shell": "~0.6.1",
-    "jit-grunt": "^0.9.1",
-    "load-grunt-tasks": "^0.4.0",
-    "time-grunt": "^0.3.1"
-  }  
+    "@11ty/eleventy": "^3.1.8",
+    "html-minifier-terser": "^7.2.0",
+    "js-yaml": "^5.5.0",
+    "litelight-js": "^1.2.0",
+    "markdown-it": "^15.0.3",
+    "markdown-it-attrs": "^5.0.1",
+    "sass": "^1.108.2",
+    "terser": "^5.51.2"
+  }
 }

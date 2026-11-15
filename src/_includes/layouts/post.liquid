@@ -1,0 +1,30 @@
+---
+layout: base
+---
+<article class="post col-xs-12 text-section" itemscope itemtype="https://schema.org/BlogPosting">
+  <header class="post-header col-all-full-width">
+    <h1 class="post-title" itemprop="name headline">{{ title }}</h1>
+    <time datetime="{{ page.date | isoDate }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>
+  </header>
+  <div class="post-content text-col" itemprop="articleBody">
+    {{ content }}
+  </div>
+  {%- if categories %}
+  <footer class="post-footer">
+    <p>{% for cat in categories %}<a href="/categories/{{ cat }}/">{{ cat }}</a> {% endfor %}</p>
+  </footer>
+  {%- endif %}
+</article>
+
+{%- assign previousPost = collections.posts | getNextCollectionItem: page %}
+{%- assign nextPost = collections.posts | getPreviousCollectionItem: page %}
+{%- if previousPost or nextPost %}
+<div class="page-navigation col-xs-12 col-all-full-width">
+  {%- if previousPost %}
+  <a class="prev" href="{{ previousPost.url }}">&laquo; {{ previousPost.data.title }}</a>
+  {%- endif %}
+  {%- if nextPost %}
+  <a class="next" href="{{ nextPost.url }}">{{ nextPost.data.title }} &raquo;</a>
+  {%- endif %}
+</div>
+{%- endif %}

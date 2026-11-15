@@ -1,0 +1,15 @@
+---
+layout: page
+title: Photos
+permalink: /photos/
+currentPage: photos
+topTitle: Photos
+sitemap:
+ priority: 0.7
+---
+
+<p class="col-xs-12">Click on a photo to make it bigger</p>
+{% include "partials/photo-grid.html", photos: photos %}
+
+<p class="col-xs-12">Some photos from the recording sessions for the new album, &quot;Postcards&quot;</p>
+{% include "partials/photo-grid.html", photos: photos_recording %}
