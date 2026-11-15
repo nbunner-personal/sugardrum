@@ -1,0 +1,24 @@
+---
+layout: page
+title: Videos
+permalink: /videos/
+currentPage: videos
+bodyClass: videos
+sitemap:
+  priority: 0.7
+---
+{%- assign firstVideo = videos.first.videos.first %}
+<div class="embed-responsive embed-responsive-16by9 embed-responsive-item" id="videoPlayer">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ firstVideo.id }}" title="{{ firstVideo.title }}" frameborder="0" allowfullscreen></iframe>
+</div>
+
+{%- for section in videos %}
+<div class="col-xs-12">
+  <h3>{{ section.heading }}</h3>
+  <ul class="video_thumbnails list-unstyled">
+    {%- for video in section.videos %}
+    <li class="videoThumbnail" id="vid-{{ video.id }}" data-video-id="{{ video.id }}" tabindex="0" role="button"><span>{{ video.title }}</span><em>{{ video.description }}</em></li>
+    {%- endfor %}
+  </ul>
+</div>
+{%- endfor %}

@@ -1,0 +1,3 @@
+{%- for item in navigation %}
+<li class="menu-item{% if currentPage == item.key %} current-menu-item{% endif %}"><a href="{{ item.url }}" title="{{ item.title }}"{% if currentPage == item.key %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+{%- endfor %}

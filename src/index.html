@@ -1,0 +1,37 @@
+---
+layout: page
+currentPage: home
+topSectionText: partials/review-quotes.html
+fullWidth: true
+---
+<div class="col-cont text-section">
+  <h2 class="h1 col-xs-12">New album: Postcards</h2>
+  {%- for release in music %}
+  {%- if release.featured %}
+  {% include "partials/release.html", release: release, variant: "homepage" %}
+  {%- endif %}
+  {%- endfor %}
+
+  <div class="col-xs-12">
+    <blockquote><p>&#8220;From the whispered wonder of ‘Under the Stairs’ to the finally acoustic springs of chipper sounds of album closer ‘True Nature of Cats’, Nigel manages to instil a pure, and relatively unadulterated sense of calm and joy&hellip;. It’s lead single ‘Choccy Rolls’ that shines as the standout anthem; a heartfelt account of watching a loved one lose words and memories as they succumb to dementia.&#8221; &#8211; Anthem Review</p></blockquote>
+  </div>
+</div>
+
+<section class="videos-section">
+  <div class="col-cont">
+    <h2 class="h1 col-xs-12">Featured video</h2>
+    <div class="youtube-container home-youtube-container embed-responsive embed-responsive-16by9 embed-responsive-item" id="videoPlayer">
+      <div class="homeVideoThumbnail home-videoplayer" data-video-id="jt9BeiRDwJI"><img src="https://img.youtube.com/vi/jt9BeiRDwJI/0.jpg" alt="There is a light that never goes out - acoustic cover video"></div>
+      <i class="fa fa-youtube-play homeVideoPlayButton" aria-hidden="true"></i>
+    </div>
+    <p class="col-xs-12">The Smiths - There is a light that never goes out - Acoustic Cover by Sugardrum.</p>
+  </div>
+</section>
+
+<div class="col-cont text-section">
+  <h2 class="h1 col-xs-12">Latest news</h2>
+  {%- for post in collections.posts limit: 5 %}
+  {% include "partials/post-snippet.html" %}
+  {%- endfor %}
+  <p class="col-xs-12"><a href="/blog/">More news&hellip;</a></p>
+</div>

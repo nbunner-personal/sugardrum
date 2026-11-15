@@ -1,0 +1,13 @@
+---
+layout: base
+---
+<article role="article">
+  {%- if title and topTitle == nil %}
+  <header class="article-header clearfix">
+    <div class="col-xs-12"><h1 class="post-title">{{ title }}</h1></div>
+  </header>
+  {%- endif %}
+  <section class="col-cont entry-content clearfix" itemprop="articleBody">
+    {{ content }}
+  </section>
+</article>
