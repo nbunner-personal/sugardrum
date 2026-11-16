@@ -47,6 +47,11 @@ export default function (eleventyConfig) {
     if (data.draft && isProduction) return false;
   });
 
+  // --- Cache busting ---------------------------------------------------------
+  // Added to the CSS/JS URLs (`main.css?v=…`) so each deploy makes browsers
+  // fetch the new files instead of reusing an old cached copy.
+  eleventyConfig.addGlobalData("assetVersion", (process.env.GITHUB_SHA || Date.now().toString(36)).slice(0, 8));
+
   // --- Sass ----------------------------------------------------------------
   eleventyConfig.addTemplateFormats("scss");
   eleventyConfig.addExtension("scss", {
