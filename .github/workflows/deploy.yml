@@ -56,11 +56,29 @@ jobs:
       # --delete removes files from the bucket that are no longer in the build.
       # The mp3s folder is kept out of git, so it's excluded here to stop it
       # being wiped from the bucket.
-      - name: Upload to S3
+      #
+      # Two passes so each kind of file gets the right Cache-Control header:
+      #  1. CSS, JS, images etc. – browsers may keep them for a week. CSS/JS
+      #     URLs carry ?v=<commit> (see eleventy.config.js), so a deploy
+      #     still makes browsers fetch the new versions straight away.
+      #  2. HTML and XML (pages, feed, sitemap) – browsers check for a new
+      #     version on every visit; CloudFront keeps them for a day, and the
+      #     invalidation below clears that on each deploy.
+      - name: Upload assets to S3
         run: |
           aws s3 sync _site/ "s3://${S3_BUCKET}" \
             --delete \
             --exclude "external/mp3s/*" \
+            --exclude "*.html" --exclude "*.xml" \
+            --cache-control "public, max-age=604800" \
+            --no-progress
+
+      - name: Upload pages to S3
+        run: |
+          aws s3 sync _site/ "s3://${S3_BUCKET}" \
+            --delete \
+            --exclude "*" --include "*.html" --include "*.xml" \
+            --cache-control "public, max-age=0, must-revalidate, s-maxage=86400" \
             --no-progress
 
       - name: Clear CloudFront cache
