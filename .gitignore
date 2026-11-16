@@ -1,9 +1,4 @@
-_site
-
-
-
-mp3s/
-
+_site/
 node_modules/
-
-\.sass-cache/
+src/external/mp3s/
+.DS_Store

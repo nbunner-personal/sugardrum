@@ -1,0 +1,70 @@
+# Build the site with Eleventy and publish it to the sugardrum.com S3 bucket,
+# then clear the CloudFront cache so visitors see the new version.
+#
+# Runs on every push to master, or by hand from the Actions tab ("Run workflow").
+#
+# Repository secrets needed (Settings → Secrets and variables → Actions):
+#   AWS_ACCESS_KEY_ID           – IAM user that can write to the bucket
+#   AWS_SECRET_ACCESS_KEY         and create CloudFront invalidations
+#   CLOUDFRONT_DISTRIBUTION_ID  – the distribution in front of sugardrum.com
+
+name: Deploy to S3
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Never run two deploys at once; a newer push waits for the current one.
+concurrency:
+  group: deploy-s3
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  AWS_REGION: eu-west-1
+  S3_BUCKET: sugardrum.com
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # --delete removes files from the bucket that are no longer in the build.
+      # The mp3s folder is kept out of git, so it's excluded here to stop it
+      # being wiped from the bucket.
+      - name: Upload to S3
+        run: |
+          aws s3 sync _site/ "s3://${S3_BUCKET}" \
+            --delete \
+            --exclude "external/mp3s/*" \
+            --no-progress
+
+      - name: Clear CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --paths "/*"

@@ -1,0 +1,9 @@
+<ul class="photos list-unstyled col-xs-12">
+  {%- for photo in photos %}
+  <li>
+    <a class="lightbox" href="{{ site.mediaUrl }}images/photos/{{ photo.url }}" title="{{ photo.caption | escape }}">
+      <img src="{{ site.mediaUrl }}images/photos/thumbnails/{{ photo.url }}" alt="{{ photo.caption | escape }}" width="120" height="120" loading="lazy">
+    </a>
+  </li>
+  {%- endfor %}
+</ul>

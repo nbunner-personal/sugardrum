@@ -1,0 +1,40 @@
+---
+layout: base
+title: Sugardrum news
+currentPage: news
+topTitle: News
+pagination:
+  data: collections.posts
+  size: 15
+  alias: posts
+permalink: "/blog/{% if pagination.pageNumber > 0 %}page{{ pagination.pageNumber | plus: 1 }}/{% endif %}"
+---
+<div class="text-section clearfix">
+{%- for post in posts %}
+  {% include "partials/post-snippet.html" %}
+{%- endfor %}
+
+{%- if pagination.pages.size > 1 %}
+  <ul class="pagination col-xs-12">
+    {%- if pagination.href.previous %}
+    <li><a href="{{ pagination.href.previous }}">&laquo; Prev</a></li>
+    {%- else %}
+    <li class="disabled"><span aria-hidden="true">&laquo; Prev</span></li>
+    {%- endif %}
+
+    {%- for pageHref in pagination.hrefs %}
+    {%- if forloop.index0 == pagination.pageNumber %}
+    <li class="active"><span aria-current="page">{{ forloop.index }}</span></li>
+    {%- else %}
+    <li><a href="{{ pageHref }}">{{ forloop.index }}</a></li>
+    {%- endif %}
+    {%- endfor %}
+
+    {%- if pagination.href.next %}
+    <li><a href="{{ pagination.href.next }}">Next &raquo;</a></li>
+    {%- else %}
+    <li class="disabled"><span aria-hidden="true">Next &raquo;</span></li>
+    {%- endif %}
+  </ul>
+{%- endif %}
+</div>

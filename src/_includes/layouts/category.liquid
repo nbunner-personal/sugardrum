@@ -1,0 +1,8 @@
+---
+layout: page
+---
+<div class="text-section clearfix">
+{%- for post in category.posts %}
+  {% include "partials/post-snippet.html" %}
+{%- endfor %}
+</div>

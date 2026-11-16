@@ -1,0 +1,23 @@
+<footer class="main-footer" role="contentinfo">
+  <div class="col-xs-12">
+    <div class="social-links col-xs-12">
+      {%- for s in social %}
+      <a href="{{ s.url }}" title="Sugardrum on {{ s.name }}" target="_blank" rel="noopener" class="social_{{ s.icon }}"><i class="fa fa-{{ s.icon }}" aria-hidden="true"></i><span class="sr-only">{{ s.name }}</span></a>
+      {%- endfor %}
+    </div>
+    <nav role="navigation" aria-label="Footer">
+      <ul id="menu-footer-menu" class="footer-nav">
+        <li class="menu-item{% if currentPage == 'home' %} current-menu-item{% endif %}"><a href="/"{% if currentPage == 'home' %} aria-current="page"{% endif %}>Home</a></li>
+        {%- include "partials/nav.html" %}
+      </ul>
+    </nav>
+  </div>
+  <fieldset class="theme-toggle">
+    <legend class="sr-only">Colour scheme</legend>
+    <input type="radio" name="theme" id="theme-light" value="light" class="sr-only">
+    <label for="theme-light" class="theme-toggle__option theme-toggle__option--light"><i class="fa fa-sun-o" aria-hidden="true"></i> Light mode</label>
+    <input type="radio" name="theme" id="theme-dark" value="dark" class="sr-only">
+    <label for="theme-dark" class="theme-toggle__option theme-toggle__option--dark"><i class="fa fa-moon-o" aria-hidden="true"></i> Dark mode</label>
+  </fieldset>
+  <p class="source-org copyright">&copy; {{ "now" | date: "%Y" }} Sugardrum.</p>
+</footer>
