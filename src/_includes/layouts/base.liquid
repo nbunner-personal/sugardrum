@@ -17,6 +17,7 @@
   <title>{{ title | default: site.title }}</title>
   {%- if isPost %}
     {%- assign metaDescription = content | excerpt: excerpt | truncate: 160 %}
+    {%- if metaDescription == "" %}{% assign metaDescription = site.description %}{% endif %}
   {%- elsif title %}
     {%- assign metaDescription = site.description | append: " - " | append: title %}
   {%- else %}

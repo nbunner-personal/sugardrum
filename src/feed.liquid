@@ -9,7 +9,7 @@ eleventyExcludeFromCollections: true
     <description>{{ site.description | escape }}</description>
     <link>{{ site.url }}/</link>
     <atom:link href="{{ permalink | absoluteUrl: site.url }}" rel="self" type="application/rss+xml"/>
-    <lastBuildDate>{{ "now" | dateToRfc822 }}</lastBuildDate>
+    <lastBuildDate>{{ collections.posts | getNewestCollectionItemDate | dateToRfc822 }}</lastBuildDate>
     {%- for post in collections.posts limit: 10 %}
     {%- assign postUrl = post.url | absoluteUrl: site.url %}
     <item>

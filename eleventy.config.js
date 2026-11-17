@@ -6,6 +6,12 @@ import * as sass from "sass";
 import markdownIt from "markdown-it";
 import markdownItAttrs from "markdown-it-attrs";
 import { minify as minifyHtml } from "html-minifier-terser";
+import {
+  absoluteUrl,
+  convertHtmlToAbsoluteUrls,
+  dateToRfc822,
+  getNewestCollectionItemDate,
+} from "@11ty/eleventy-plugin-rss";
 
 const require = createRequire(import.meta.url);
 const liteLightDir = path.dirname(require.resolve("litelight-js/package.json"));
@@ -50,6 +56,7 @@ export default function (eleventyConfig) {
   // --- Cache busting ---------------------------------------------------------
   // Added to the CSS/JS URLs (`main.css?v=…`) so each deploy makes browsers
   // fetch the new files instead of reusing an old cached copy.
+  eleventyConfig.addGlobalData("isProduction", isProduction);
   eleventyConfig.addGlobalData("assetVersion", (process.env.GITHUB_SHA || Date.now().toString(36)).slice(0, 8));
 
   // --- Sass ----------------------------------------------------------------
@@ -93,16 +100,16 @@ export default function (eleventyConfig) {
   eleventyConfig.watchIgnores.add("src/external/mp3s/**");
 
   // --- Collections ---------------------------------------------------------
-  const postGlob = "src/posts/**/*.{md,html}";
-  eleventyConfig.addCollection("posts", (api) =>
-    api.getFilteredByGlob(postGlob).sort((a, b) => b.date - a.date)
-  );
+  // Newest first. Shared by the blog, feed and category pages so they always agree.
+  const getPosts = (api) =>
+    api.getFilteredByGlob("src/posts/**/*.{md,html}").sort((a, b) => b.date - a.date);
+  eleventyConfig.addCollection("posts", getPosts);
   eleventyConfig.addCollection("songStories", (api) =>
     api.getFilteredByGlob("src/song-stories/*.md")
   );
   eleventyConfig.addCollection("categories", (api) => {
     const map = new Map();
-    for (const post of api.getFilteredByGlob(postGlob).sort((a, b) => b.date - a.date)) {
+    for (const post of getPosts(api)) {
       for (const cat of post.data.categories || []) {
         if (!map.has(cat)) map.set(cat, []);
         map.get(cat).push(post);
@@ -115,19 +122,25 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter("date", formatDate);
   eleventyConfig.addFilter("isoDate", (value) => new Date(value).toISOString());
   eleventyConfig.addFilter("stripHtml", stripHtml);
-  eleventyConfig.addFilter("dateToRfc822", (value) => (value === "now" ? new Date() : new Date(value)).toUTCString());
-  eleventyConfig.addFilter("absoluteUrl", (url, base) => new URL(url, base).href);
-  // Make root-relative and protocol-relative links absolute (for the RSS feed).
-  eleventyConfig.addFilter("htmlToAbsoluteUrls", (html, base) =>
-    String(html || "")
-      .replace(/(\s(?:href|src)=["'])\/\//g, "$1https://")
-      .replace(/(\s(?:href|src)=["'])\/(?!\/)/g, `$1${new URL("/", base).href}`)
+  // RSS helpers from @11ty/eleventy-plugin-rss. The plugin itself only
+  // registers them for Nunjucks, so they're added here for Liquid templates.
+  eleventyConfig.addFilter("dateToRfc822", dateToRfc822);
+  eleventyConfig.addFilter("getNewestCollectionItemDate", getNewestCollectionItemDate);
+  eleventyConfig.addFilter("absoluteUrl", absoluteUrl);
+  // Makes every link/image URL in a post absolute (href, src, srcset, poster…)
+  // so feed readers can resolve them.
+  eleventyConfig.addAsyncFilter("htmlToAbsoluteUrls", (html, base) =>
+    html ? convertHtmlToAbsoluteUrls(html, base, { closingSingleTag: "slash" }) : ""
   );
 
   // Plain-text summary: explicit `excerpt` front matter, else the first paragraph.
+  // In a layout, `content` is already wrapped (title, date, categories), so
+  // look only inside the post body (itemprop="articleBody") when present.
   eleventyConfig.addFilter("excerpt", (content, explicit) => {
     if (explicit) return stripHtml(explicit);
-    const html = String(content || "");
+    const full = String(content || "");
+    const bodyStart = full.indexOf('itemprop="articleBody"');
+    const html = bodyStart === -1 ? full : full.slice(full.indexOf(">", bodyStart) + 1);
     const para = html.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
     return stripHtml(para ? para[1] : html.split(/\n\s*\n/)[0]);
   });

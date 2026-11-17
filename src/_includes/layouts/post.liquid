@@ -11,7 +11,7 @@ layout: base
   </div>
   {%- if categories %}
   <footer class="post-footer">
-    <p>{% for cat in categories %}<a href="/categories/{{ cat }}/">{{ cat }}</a> {% endfor %}</p>
+    <p>{% for cat in categories %}<a href="/categories/{{ cat | slugify }}/">{{ cat }}</a> {% endfor %}</p>
   </footer>
   {%- endif %}
 </article>

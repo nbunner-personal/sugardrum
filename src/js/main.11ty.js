@@ -7,9 +7,9 @@ export const data = {
   eleventyExcludeFromCollections: true,
 };
 
-export async function render() {
+export async function render({ isProduction }) {
   const code = await readFile(new URL("scripts.js", import.meta.url), "utf8");
-  if (process.env.ELEVENTY_ENV !== "production") return code;
+  if (!isProduction) return code;
   const result = await minify(code, { module: true, compress: true, mangle: true });
   return result.code;
 }

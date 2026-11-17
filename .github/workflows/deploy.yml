@@ -5,7 +5,8 @@
 #
 # Repository secrets needed (Settings → Secrets and variables → Actions):
 #   AWS_ACCESS_KEY_ID           – IAM user that can write to the bucket
-#   AWS_SECRET_ACCESS_KEY         and create CloudFront invalidations
+#   AWS_SECRET_ACCESS_KEY         and create/read CloudFront invalidations
+#                                 (cloudfront:CreateInvalidation, GetInvalidation)
 #   CLOUDFRONT_DISTRIBUTION_ID  – the distribution in front of sugardrum.com
 
 name: Deploy to S3
@@ -14,6 +15,11 @@ on:
   push:
     branches: [master]
   workflow_dispatch:
+    inputs:
+      full_upload:
+        description: "Re-upload every image/file, even unchanged ones (e.g. after changing Cache-Control below)"
+        type: boolean
+        default: false
 
 # Never run two deploys at once; a newer push waits for the current one.
 concurrency:
@@ -53,27 +59,52 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # --delete removes files from the bucket that are no longer in the build.
-      # The mp3s folder is kept out of git, so it's excluded here to stop it
-      # being wiped from the bucket.
-      #
-      # Two passes so each kind of file gets the right Cache-Control header:
-      #  1. CSS, JS, images etc. – browsers may keep them for a week. CSS/JS
-      #     URLs carry ?v=<commit> (see eleventy.config.js), so a deploy
-      #     still makes browsers fetch the new versions straight away.
-      #  2. HTML and XML (pages, feed, sitemap) – browsers check for a new
-      #     version on every visit; CloudFront keeps them for a day, and the
-      #     invalidation below clears that on each deploy.
-      - name: Upload assets to S3
+      # Files go up in three passes, each with its own Cache-Control header.
+      # --delete removes files from the bucket that are no longer in the build
+      # (each pass only deletes the kinds of file it uploads). The mp3s folder
+      # is kept out of git, so it's excluded to stop it being wiped.
+
+      # 1. Images, fonts, PDFs etc. Their URLs never change, so browsers only
+      #    keep them for a day – replacing one under the same name shows up
+      #    within 24 hours. A fresh checkout makes every file look new, so
+      #    --size-only skips files whose size hasn't changed (run the workflow
+      #    by hand with "full upload" ticked to force them all).
+      - name: Upload images and other files
         run: |
           aws s3 sync _site/ "s3://${S3_BUCKET}" \
             --delete \
             --exclude "external/mp3s/*" \
-            --exclude "*.html" --exclude "*.xml" \
+            --exclude "*.html" --exclude "*.xml" --exclude "*.css" --exclude "*.js" \
+            ${{ inputs.full_upload && ' ' || '--size-only' }} \
+            --cache-control "public, max-age=86400" \
+            --no-progress
+
+      # 2. CSS and JS. Always uploaded in full (an edit can leave the size the
+      #    same). Pages load them as main.css?v=<commit>, so browsers fetch the
+      #    new version straight away and may cache it for a week.
+      - name: Upload CSS and JS
+        run: |
+          aws s3 sync _site/ "s3://${S3_BUCKET}" \
+            --delete \
+            --exclude "*" --include "*.css" --include "*.js" \
             --cache-control "public, max-age=604800" \
             --no-progress
 
-      - name: Upload pages to S3
+      # CloudFront ignores the ?v= part of the URL, so clear its copy of the old
+      # CSS/JS – and wait – before any new page can ask for main.css?v=<new>.
+      # Otherwise a visitor could get the old CSS cached under the new URL.
+      - name: Clear CloudFront cache for CSS and JS
+        run: |
+          id=$(aws cloudfront create-invalidation \
+            --distribution-id "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --paths "/css/*" "/js/*" \
+            --query Invalidation.Id --output text)
+          aws cloudfront wait invalidation-completed \
+            --distribution-id "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" --id "$id"
+
+      # 3. Pages, feed and sitemap. Browsers check for a new version on every
+      #    visit; CloudFront keeps them for a day, cleared by the step below.
+      - name: Upload pages
         run: |
           aws s3 sync _site/ "s3://${S3_BUCKET}" \
             --delete \

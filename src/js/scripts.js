@@ -61,7 +61,8 @@ document.querySelectorAll(".homeVideoThumbnail, .homeVideoPlayButton").forEach((
 
 // Photo lightbox (LiteLight) – only loaded on pages with `a.lightbox` links
 if (document.querySelector("a.lightbox")) {
-  import("./vendor/lite-light.min.js").then(({ init }) => {
+  // Carry this script's ?v= over so a deploy also refreshes the cached lightbox.
+  import(new URL("./vendor/lite-light.min.js" + new URL(import.meta.url).search, import.meta.url).href).then(({ init }) => {
     init({ imageSelector: "a.lightbox", imageUrlAttribute: "href" });
     addLightboxCaptions();
   });
